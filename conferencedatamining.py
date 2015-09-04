@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 import codecs
+import pickle
 #Matrix = [[0 for x in xrange(1000)] for x in xrange(1000)] 
 class BuildAbstractMatrix:
   new_dict = []
@@ -264,7 +265,7 @@ class BuildAbstractMatrix:
         transaction = nltk.sent_tokenize(cuatro)
         for wd in transaction:
           seis = nltk.word_tokenize(wd)
-          normalize_text(seis)
+          self.normalize_text(seis)
 
   def process_KDD2010(self):
     #global self.year
@@ -298,7 +299,7 @@ class BuildAbstractMatrix:
         transaction = nltk.sent_tokenize(cuatro)
         for wd in transaction:
           seis = nltk.word_tokenize(wd)
-          normalize_text(seis)
+          self.normalize_text(seis)
     #print num_articles
 
   def process_xml(self, xmlo):
@@ -322,7 +323,7 @@ class BuildAbstractMatrix:
         transaction = nltk.sent_tokenize(abstract)
         for wd in transaction:
           seis = nltk.word_tokenize(wd)
-          normalize_text(seis)
+          self.normalize_text(seis)
 
 
 
@@ -333,7 +334,7 @@ class BuildAbstractMatrix:
     #global self.abstract_counter
     currsize = 0
     lista = []
-    f = open('/Users/josehurtado/SDM2010conference.txt', 'r')
+    f = codecs.open('/Users/josehurtado/SDM2010conference.txt', 'r','utf-8')
     self.year=2010
     title = ''
    
@@ -361,7 +362,7 @@ class BuildAbstractMatrix:
         transaction = nltk.sent_tokenize(abstract)
         for wd in transaction:
           seis = nltk.word_tokenize(wd)
-          normalize_text(seis)
+          self.normalize_text(seis)
         self.abstract_counter = self.abstract_counter + 1
 
 
@@ -477,11 +478,14 @@ xml3 = "/Users/josehurtado/icac2008.xml"
 xml4 = "/Users/josehurtado/icdm2010.xml"
 dprocss = BuildAbstractMatrix()
 
-dprocss.process_datamining()
+#dprocss.process_datamining()
 #dprocss.process_xml(xml4) 
 #dprocss.process_url_icml(url7)
 #dprocss.process_KDD2010()
-#dprocss.process_SDM2010()
+dprocss.process_SDM2010()
+#output = open("save.pkl", 'wb')
+#pickle.dump(dprocss.MatrixAll,output)
+#output.close()
 print "This is the number of abstracts" + str(dprocss.abstract_counter)
 
 #sixnum = count_pattern(wdd1, wdd2) - fithnum - fourthnum -thirdnum  - secondnum - firstnum
@@ -490,16 +494,16 @@ print "This is the number of abstracts" + str(dprocss.abstract_counter)
 
 
 def print_arff_file():
-  print '%% Number of Attributes: %d'% (len(self.new_dict),)
+  print '%% Number of Attributes: %d'% (len(dprocss.new_dict),)
 
   print '@relation icayseams'
   
-  for pal in self.new_dict:
+  for pal in dprocss.new_dict:
     print '@attribute '+ pal + ' {t}'
 
   print '@data'
 
-  for line in self.MatrixAll:
+  for line in dprocss.MatrixAll:
     print ", ".join(str(e) for e in line)
     #print '\n'
 
@@ -638,7 +642,7 @@ count_pattern('import', 'applic')
 count_pattern('model', 'dynam')'''
 
 
-#print_arff_file()
+print_arff_file()
 '''count_patternn('support', 'vector', 'svm')
 count_patternn('machin', 'support', 'vector') 
 count_pattern('regress', 'logist')
